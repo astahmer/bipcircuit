@@ -1,22 +1,27 @@
-import { Box } from "@chakra-ui/react";
-import { motion } from "framer-motion";
+import { MotionBox } from "../functions/utils";
 
-export function ProgressIndicator({ controls, duration }) {
+export function ProgressIndicator({ controls, duration, constraintsRef }) {
+  console.log(controls);
+
   return (
-    <motion.div
+    <MotionBox
       transition={{ type: "tween", ease: "linear", duration }}
       animate={controls}
-      // onAnimationComplete={onAnimationComplete}
+      pos="absolute"
+      top="50%"
     >
-      <Box
+      <MotionBox
+        // drag="x"
+        drag={false}
+        dragConstraints={constraintsRef}
+        dragElastic={0}
+        dragMomentum={false}
+        cursor="pointer"
+        zIndex={10}
         h="20px"
         width={6}
         bgColor="whatsapp.300"
-        pos="absolute"
-        top="50%"
-        transform="translate3d(0%, -50%, 0)"
-        pointerEvents="none"
       />
-    </motion.div>
+    </MotionBox>
   );
 }

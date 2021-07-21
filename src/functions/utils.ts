@@ -1,4 +1,4 @@
-import { Box, BoxProps } from "@chakra-ui/react";
+import { Box, BoxProps, useMediaQuery } from "@chakra-ui/react";
 import { motion } from "framer-motion";
 import { nanoid } from "nanoid";
 import { BipItem } from "../types";
@@ -30,3 +30,8 @@ export const getClosestIn = (arr: number[], to: number) =>
   arr.reduce((prev, curr) =>
     Math.abs(curr - to) < Math.abs(prev - to) ? curr : prev
   );
+
+export const useIsMobile = () => {
+  const [isMobile] = useMediaQuery("(max-width: 1030px)");
+  return isMobile;
+};

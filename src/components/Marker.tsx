@@ -59,7 +59,6 @@ export function Marker({
   // console.log({ percent, initialX });
 
   const ref = useRef<HTMLDivElement>();
-  const dragControls = useDragControls();
   const items = useAtomValue(selectionAtom);
   const lastItem = last(items);
   const isLast = lastItem.id === id;
@@ -73,13 +72,13 @@ export function Marker({
       pos="absolute"
       top={`calc(50% - ${height / 2}px - ${padding}px)`}
       padding={`${padding}px`}
-      border={`${borderWidth}px solid red`}
+      borderWidth={borderWidth}
+      // borderColor="red"
       cursor={canDrag ? "pointer" : undefined}
       boxSizing="content-box"
       pointerEvents={isLast ? "none" : undefined}
       style={{ x }}
       drag={canDrag ? "x" : false}
-      dragControls={dragControls}
       dragConstraints={constraintsRef}
       dragMomentum={false}
       dragElastic={0}

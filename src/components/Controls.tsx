@@ -1,6 +1,7 @@
 import {
   Button,
   chakra,
+  SimpleGrid,
   Stack,
   useColorMode,
   UseNumberInputProps,
@@ -11,10 +12,10 @@ import {
   defaultStepUpdateAtom,
   defaultStepValueAtom,
 } from "../atoms";
+import { useIsMobile } from "../functions/utils";
 import { MobileNumberInput } from "./MobileNumberInput";
 import { VolumeSlider } from "./VolumeSlider";
 
-// TODO defaultDelay = atomWithStorage
 export function Controls() {
   const { colorMode, toggleColorMode } = useColorMode();
   const [defaultStepValue, setDefaultStepValue] = useAtom(defaultStepValueAtom);
@@ -22,6 +23,36 @@ export function Controls() {
     defaultStepUpdateAtom
   );
   const [defaulLoopCount, setDefaulLoopCount] = useAtom(defaultLoopCountAtom);
+  const isMobile = useIsMobile();
+
+  if (isMobile) {
+    return (
+      <Stack>
+        <Button onClick={toggleColorMode}>Color mode: {colorMode}</Button>
+        <SimpleGrid columns={2} alignItems="center" spacingX="20px">
+          <NumberInputWithLabel
+            label="Délai d'étape"
+            min={0}
+            defaultValue={defaultStepValue}
+            onChange={(_, nb) => setDefaultStepValue(nb)}
+          />
+          <NumberInputWithLabel
+            label="Augmente de X"
+            min={1}
+            defaultValue={defaultStepUpdate}
+            onChange={(_, nb) => setDefaultStepUpdate(nb)}
+          />
+          <NumberInputWithLabel
+            label="Nb de boucles"
+            min={1}
+            defaultValue={defaulLoopCount}
+            onChange={(_, nb) => setDefaulLoopCount(nb)}
+          />
+          <VolumeSlider />
+        </SimpleGrid>
+      </Stack>
+    );
+  }
 
   return (
     <Stack
@@ -64,10 +95,3 @@ const NumberInputWithLabel = ({
     <MobileNumberInput {...props} />
   </Stack>
 );
-
-{
-  /* <BipSound
-                    isPlaying={isPlaying}
-                    onFinishedPlaying={() => setPlaying(false)}
-                  /> */
-}

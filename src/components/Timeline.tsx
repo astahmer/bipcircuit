@@ -7,17 +7,18 @@ import { StepIndicator } from "./StepIndicator";
 import { BipItem, BipItemWithPercent } from "../types";
 import { ProgressIndicator } from "./ProgressIndicator";
 
-const timelineWidth = 700;
 export function Timeline({
   percents,
   controls,
   duration,
   actions,
+  width = "700px",
 }: {
   percents: Array<BipItemWithPercent>;
   controls: AnimationControls;
   duration: number;
   actions: SelectionActions<BipItem>;
+  width?: string;
 }) {
   const constraintsRef = useRef(null);
   const trackRef = useRef(null);
@@ -33,38 +34,16 @@ export function Timeline({
   console.log(halves, chunks);
 
   return (
-    <Box w={timelineWidth + "px"} pos="relative" ref={trackRef}>
+    <Box w={width} pos="relative" ref={trackRef}>
       <Box
         pos="absolute"
-        w={timelineWidth + 30 + "px"}
+        w={`calc(${width} + 30px)`}
         ref={constraintsRef}
         top="0"
         left="-15px"
         h="100%"
       />
       <Box bgColor="twitter.100" h="2px" w="100%" />
-      {/* <Flex
-        ref={stepsWrapperRef}
-        pos="absolute"
-        top="50%"
-        transform="translateY(-50%)"
-        w="100%"
-      >
-        {makeArrayOf(Math.ceil(duration + 1)).map((_, index, arr) => (
-          <StepIndicator
-            key={index}
-            bgColor={bgColor}
-            index={index}
-            withIndex
-            w={index === 0 || index === duration ? "50%" : "100%"}
-          />
-        ))}
-      </Flex> */}
-      {/* {duration && (
-          <chakra.span pos="absolute" top="100%" right="0" userSelect="none">
-            {duration}
-          </chakra.span>
-        )} */}
       <Flex
         ref={stepsWrapperRef}
         pos="absolute"
@@ -76,7 +55,7 @@ export function Timeline({
           <Flex
             key={chunkIndex}
             w={chunk.length > 1 ? "100%" : "50%"}
-            opacity={0}
+            opacity={0.1}
             transition="opacity 0.2s"
             pos="relative"
           >
@@ -106,26 +85,6 @@ export function Timeline({
           </Flex>
         ))}
       </Flex>
-      {/* <Flex
-        // ref={stepsWrapperRef}
-        pos="absolute"
-        top="100%"
-        // transform="translateY(-50%)"
-        w="100%"
-      >
-        {makeArrayOf(Math.ceil(duration * 2)).map((_, index) => (
-          <StepIndicator
-            key={index}
-            bgColor={"green"}
-            borderColor={"green"}
-            // withMiddleBar
-            index={oui[index / 2]}
-            // withIndex={!Boolean(index % 2)}
-            withIndex={false}
-            w="100%"
-          />
-        ))}
-      </Flex> */}
       {trackRef.current &&
         percents.map((item) => (
           <Marker
@@ -144,7 +103,7 @@ export function Timeline({
       <ProgressIndicator
         controls={controls}
         duration={duration}
-        // onAnimationComplete={onAnimationComplete}
+        constraintsRef={stepsWrapperRef}
       />
     </Box>
   );

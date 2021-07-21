@@ -26,6 +26,7 @@ import {
   StackProps,
   useColorMode,
   useDisclosure,
+  useMediaQuery,
   usePrevious,
 } from "@chakra-ui/react";
 import { useSelection } from "@pastable/core";
@@ -65,7 +66,7 @@ import { useSelectionAtom } from "../functions/useSelectionAtom";
 import { StepInput } from "./StepInput";
 import { useBip } from "../functions/useBip";
 import { Timeline } from "./Timeline";
-import { makeDelay, getSum, getId } from "../functions/utils";
+import { makeDelay, getSum, getId, useIsMobile } from "../functions/utils";
 import { BipItem } from "../types";
 import { BipInfos, useBipInfos } from "../functions/useBipInfos";
 import { useEffect } from "react";
@@ -158,12 +159,14 @@ const BipForm = () => {
   const playOrPause = () =>
     state.matches("started.playing") ? pause() : play();
 
+  const isMobile = useIsMobile();
+
   return (
-    <Stack w="100%" maxW="700px">
+    <Stack w="100%" maxW={["100%", "700px"]}>
       <SimpleGrid
-        columns={4}
+        columns={[2, 4]}
         spacing="20px"
-        spacingY="80px"
+        spacingY={["40px", "80px"]}
         alignItems="center"
       >
         {items.map((item) => (
@@ -186,11 +189,11 @@ const BipForm = () => {
       <Box>
         <Box my="50px">
           <Timeline
+            width={isMobile ? "100%" : "700px"}
             actions={actions}
             percents={percentItems}
             duration={duration}
             controls={controls}
-            // onAnimationComplete={(def: any) => console.log(def) && def.transition.duration > 0 && send("END")}
           />
         </Box>
       </Box>

@@ -1,14 +1,7 @@
 import { Center, ChakraProvider, extendTheme, Flex } from "@chakra-ui/react";
-import { useAtom } from "jotai";
-import { useAtomValue } from "jotai/utils";
-import "./App.css";
-import { isPlayingAtom } from "./atoms";
 import { BipCircuit } from "./components/BipCircuit";
-import { BipSound } from "./components/BipSound";
 import { Controls } from "./components/Controls";
-
-// prevent react-sound to YELL in the console
-// (window as any).soundManager.setup({ debugMode: false });
+import "./App.css";
 
 const theme = extendTheme({ config: { initialColorMode: "light" } });
 
@@ -16,10 +9,15 @@ function App() {
   return (
     <ChakraProvider theme={theme}>
       <Flex direction="column" boxSize="100%">
-        <Center mt="40px" mb="40px" px="4" maxW="1200px" alignSelf="center">
+        <Center
+          my={["20px", "40px"]}
+          px={[0, "4"]}
+          maxW="1200px"
+          alignSelf="center"
+        >
           <Controls />
         </Center>
-        <Center p="8" pt="0" h="100%">
+        <Center p={[0, "8"]} pt="0" h="100%">
           <BipCircuit />
         </Center>
       </Flex>
