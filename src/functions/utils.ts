@@ -1,8 +1,6 @@
 import { Box, BoxProps, useMediaQuery } from "@chakra-ui/react";
 import { motion } from "framer-motion";
-import { useAtomValue } from "jotai/utils";
 import { nanoid } from "nanoid";
-import { volumeAtom } from "../atoms";
 import { BipItem } from "../types";
 import bipSound from "/bip.mp3";
 

@@ -44,7 +44,6 @@ export const createTimelineMachine = ({
                 END: {
                   target: "#timeline.end",
                   actions: [
-                    onReachStep,
                     "incrementLoopCount",
                     // "setElapsedTimeToDuration",
                   ],
