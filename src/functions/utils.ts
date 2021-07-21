@@ -1,11 +1,15 @@
 import { Box, BoxProps, useMediaQuery } from "@chakra-ui/react";
 import { motion } from "framer-motion";
+import { useAtomValue } from "jotai/utils";
 import { nanoid } from "nanoid";
+import { volumeAtom } from "../atoms";
 import { BipItem } from "../types";
+import bipSound from "/bip.mp3";
 
 export const MotionBox = motion<BoxProps>(Box);
 
 export const playSound = (sound: string, volume: number) => {
+  console.log({ sound, volume });
   const audio = new Audio(sound);
   audio.volume = volume;
   audio.play();
@@ -35,3 +39,6 @@ export const useIsMobile = () => {
   const [isMobile] = useMediaQuery("(max-width: 1030px)");
   return isMobile;
 };
+
+export const playBip = () =>
+  playSound(bipSound, Number(localStorage.getItem("bip/volume") || 0.5));

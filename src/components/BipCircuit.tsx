@@ -4,77 +4,27 @@ import {
   Button,
   Center,
   chakra,
-  Flex,
-  NumberDecrementStepper,
-  NumberIncrementStepper,
-  NumberInput,
-  NumberInputField,
-  NumberInputStepper,
-  Popover,
-  PopoverArrow,
-  PopoverBody,
-  PopoverCloseButton,
-  PopoverContent,
-  PopoverHeader,
-  PopoverTrigger,
   SimpleGrid,
-  Slider,
-  SliderFilledTrack,
-  SliderThumb,
-  SliderTrack,
   Stack,
-  StackProps,
-  useColorMode,
-  useDisclosure,
-  useMediaQuery,
-  usePrevious,
 } from "@chakra-ui/react";
-import { useSelection } from "@pastable/core";
-import { atom, useAtom } from "jotai";
-import { atomWithStorage, useAtomValue, useUpdateAtom } from "jotai/utils";
-import { nanoid } from "nanoid";
-import { useRef, useState } from "react";
-import {
-  FormProvider,
-  useFieldArray,
-  useForm,
-  useFormContext,
-} from "react-hook-form";
+import { useMachine } from "@xstate/react";
+import { useAnimation } from "framer-motion";
+import { useAtomValue } from "jotai/utils";
+import { useEffect, useRef, useState } from "react";
 import {
   defaultLoopCountAtom,
   defaultStepValueAtom,
-  isPlayingAtom,
   selectionAtom,
-  volumeAtom,
 } from "../atoms";
-import { TextInput } from "./TextInput";
-import {
-  LazyMotion,
-  domAnimation,
-  m,
-  useAnimation,
-  CustomDomComponent,
-  PanInfo,
-  animate,
-  TargetAndTransition,
-} from "framer-motion";
-import { createMachine } from "xstate";
-import { assign } from "xstate";
-import { useMachine } from "@xstate/react";
-import { createTimelineMachine } from "../timelineMachine";
-import { useSelectionAtom } from "../functions/useSelectionAtom";
-import { StepInput } from "./StepInput";
-import { useBip } from "../functions/useBip";
-import { Timeline } from "./Timeline";
-import { makeDelay, getSum, getId, useIsMobile } from "../functions/utils";
-import { BipItem } from "../types";
 import { BipInfos, useBipInfos } from "../functions/useBipInfos";
-import { useEffect } from "react";
+import { useSelectionAtom } from "../functions/useSelectionAtom";
+import { getId, makeDelay, playBip, useIsMobile } from "../functions/utils";
+import { createTimelineMachine } from "../timelineMachine";
+import { BipItem } from "../types";
+import { StepInput } from "./StepInput";
+import { Timeline } from "./Timeline";
 
 export const BipCircuit = (props: BoxProps) => {
-  const [shouldPlay, setShouldPlay] = useState(false);
-  //   console.log({ shouldPlay });
-
   return (
     <Box pos="relative" borderWidth="4px" boxSize="100%" p="8" {...props}>
       <Center>
@@ -84,24 +34,19 @@ export const BipCircuit = (props: BoxProps) => {
   );
 };
 
-// const initial = [makeDelay()];
-
 const BipForm = () => {
-  //   const [items, actions] = useSelection<BipItem>({ getId, initial });
   const defaultStepValue = useAtomValue(defaultStepValueAtom);
   const [items, actions] = useSelectionAtom<BipItem>(selectionAtom, { getId });
   const append = () => actions.add(makeDelay(defaultStepValue));
-  const ctxRef = useRef<BipInfos>();
-  const { duration, percentItems } = useBipInfos(ctxRef);
-
-  const controls = useAnimation();
-
-  const bip = useBip();
-  const onReachStep = () => bip();
 
   const stopWatchRef = useRef<HTMLElement>();
   const totalRef = useRef<HTMLElement>();
   const loopTo = useAtomValue(defaultLoopCountAtom);
+
+  const controls = useAnimation();
+  const ctxRef = useRef<BipInfos>();
+  const { duration, percentItems } = useBipInfos(ctxRef);
+  const onReachStep = () => playBip();
 
   const [state, send] = useMachine(() =>
     createTimelineMachine({
@@ -138,21 +83,10 @@ const BipForm = () => {
       }),
     [loopTo]
   );
+
   console.log(state.toStrings().slice(-1)[0]);
   console.log(state.context);
-  //   console.log({
-  //     items,
-  //     points,
-  //     percents,
-  //     duration,
-  //     elapsedTime: state.context.elapsedTime,
-  //     state,
-  //   });
-  //   console.log({
-  //     value: state.value,
-  //     ctx: state.context,
-  //     reftime: state.context.ref.elapsedTime,
-  //   });
+
   const play = () => send("START");
   const stop = () => send("STOP");
   const pause = () => send("PAUSE");

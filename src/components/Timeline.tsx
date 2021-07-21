@@ -1,7 +1,7 @@
 import { Box, chakra, Flex, useColorModeValue } from "@chakra-ui/react";
 import { chunk, makeArrayOf, SelectionActions } from "@pastable/core";
-import { useRef, useState } from "react";
-import { AnimationControls, VisualElementLifecycles } from "framer-motion";
+import { useRef } from "react";
+import { AnimationControls } from "framer-motion";
 import { Marker } from "./Marker";
 import { StepIndicator } from "./StepIndicator";
 import { BipItem, BipItemWithPercent } from "../types";
