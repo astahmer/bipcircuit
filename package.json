@@ -11,6 +11,7 @@
     "@emotion/styled": "^11",
     "@pastable/core": "^0.1.5",
     "@xstate/react": "^1.5.1",
+    "buzz": "^1.2.1",
     "framer-motion": "^4",
     "jotai": "^1.2.1",
     "leva": "^0.9.13",
@@ -21,6 +22,8 @@
     "react-hook-form": "^7.11.0",
     "react-icons": "^4.2.0",
     "react-sound": "^1.2.0",
+    "soundmanager2": "^2.97.20170602",
+    "use-sound": "^4.0.1",
     "valtio": "^1.0.7",
     "xstate": "^4.23.0"
   },

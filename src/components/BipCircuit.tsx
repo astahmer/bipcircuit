@@ -15,6 +15,7 @@ import {
   defaultLoopCountAtom,
   defaultStepValueAtom,
   selectionAtom,
+  volumeAtom,
 } from "../atoms";
 import { BipInfos, useBipInfos } from "../functions/useBipInfos";
 import { useSelectionAtom } from "../functions/useSelectionAtom";
@@ -23,6 +24,13 @@ import { createTimelineMachine } from "../timelineMachine";
 import { BipItem } from "../types";
 import { StepInput } from "./StepInput";
 import { Timeline } from "./Timeline";
+import Sound from "react-sound";
+import useSound from "use-sound";
+import { on } from "@pastable/core";
+import buzz from "buzz";
+
+const audio = new Audio("/bip.mp3");
+var sound = new buzz.sound("/bip.mp3");
 
 export const BipCircuit = (props: BoxProps) => {
   return (
@@ -35,6 +43,7 @@ export const BipCircuit = (props: BoxProps) => {
 };
 
 const BipForm = () => {
+  console.log("ONCLICK");
   const defaultStepValue = useAtomValue(defaultStepValueAtom);
   const [items, actions] = useSelectionAtom<BipItem>(selectionAtom, { getId });
   const append = () => actions.add(makeDelay(defaultStepValue));
@@ -46,7 +55,23 @@ const BipForm = () => {
   const controls = useAnimation();
   const ctxRef = useRef<BipInfos>();
   const { duration, percentItems } = useBipInfos(ctxRef);
-  const onReachStep = () => playBip();
+  const volume = useAtomValue(volumeAtom);
+
+  const onClick = async () => {
+    try {
+      audio.volume = volume;
+      audio.currentTime = 0;
+      await audio.play();
+      console.log("TOUCHSTART");
+    } catch (error) {
+      console.error(error);
+    }
+  };
+
+  const onReachStep = () => {
+    onClick();
+  };
+  // const onReachStepRef = useRef(() => playBip())
 
   const [state, send] = useMachine(() =>
     createTimelineMachine({
@@ -90,10 +115,30 @@ const BipForm = () => {
   const play = () => send("START");
   const stop = () => send("STOP");
   const pause = () => send("PAUSE");
-  const playOrPause = () =>
+  const playOrPause = () => {
+    audio.src = "/bip.mp3";
+    if (state.matches("stop")) {
+      audio.load();
+      audio.play();
+    }
     state.matches("started.playing") ? pause() : play();
+  };
 
   const isMobile = useIsMobile();
+
+  const startBtnRef = useRef();
+  useEffect(() => {
+    console.log(startBtnRef.current);
+    audio.volume = volume;
+    audio.load();
+    // return on(startBtnRef.current, "touchstart", (e) => {
+    //   console.log("PLAY AUDIO TOUCHSYART");
+    //   const audio = new Audio("/bip.ogg");
+    //   audio.volume = volume;
+    //   audio.load();
+    //   audio.play();
+    // });
+  }, []);
 
   return (
     <Stack w="100%" maxW={["100%", "700px"]}>
@@ -138,6 +183,7 @@ const BipForm = () => {
             w="100%"
             onClick={playOrPause}
             isDisabled={!percentItems.length}
+            ref={startBtnRef}
           >
             {state.matches("started.playing")
               ? "Pause"

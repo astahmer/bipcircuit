@@ -6,11 +6,19 @@ import bipSound from "/bip.mp3";
 
 export const MotionBox = motion<BoxProps>(Box);
 
-export const playSound = (sound: string, volume: number) => {
-  console.log({ sound, volume });
-  const audio = new Audio(sound);
+const audio = new Audio(bipSound);
+audio.load();
+
+export const playSound = async (sound: string, volume: number) => {
+  audio.currentTime = 0;
   audio.volume = volume;
-  audio.play();
+
+  try {
+    audio.play();
+    console.log("play");
+  } catch (error) {
+    console.log(error);
+  }
 };
 
 export function areRectsIntersecting(a: DOMRect, b: DOMRect) {
